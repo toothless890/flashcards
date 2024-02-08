@@ -186,8 +186,8 @@ def flipCard(e=""):
         globals()["openFilePrefix"] = "Characters/"
     else:
         globals()["openFilePrefix"] = "Descriptions/"
-        clearCanvas()
-    
+        
+    clearCanvas()
     root.title(openFilePrefix+saveFileName)
     getsavedrawing()
     
@@ -316,6 +316,7 @@ def edit(file):
         dataEditor.getCards()
         skipCard()
         getsavedrawing()
+        dataEditor.shuffle()
     except:
         pass
     root.mainloop()

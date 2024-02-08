@@ -7,3 +7,5 @@ draw.spec
 data.txt
 data.txt
 *.txt
+__pycache__/draw.cpython-310.pyc
+__pycache__/dataEditor.cpython-310.pyc
