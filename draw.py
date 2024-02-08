@@ -37,7 +37,7 @@ saveFileName = "testfail.pkl"
 global openFilePrefix
 openFilePrefix = "Characters/"
 global setNameVar
-
+global givenPrefix
 global cardIndex
 cardIndex = 0
 global line_width
@@ -161,6 +161,7 @@ def skipCard(e=""):
         globals()["openFilePrefix"] = "Descriptions/"
     else:
         globals()["openFilePrefix"] = "Characters/"
+    globals()["givenPrefix"] = globals()['openFilePrefix']
     getsavedrawing()
     
     globals()["cardIndex"]+=1
@@ -172,11 +173,11 @@ def skipCard(e=""):
     
 
 def correctAnswer(e=""):
-    dataEditor.correct(globals()["saveFileName"], globals()["openFilePrefix"])
+    dataEditor.correct(globals()["saveFileName"], globals()["givenPrefix"])
     skipCard()
     
 def incorrectAnswer(e=""):
-    dataEditor.incorrect(globals()["saveFileName"], globals()["openFilePrefix"])
+    dataEditor.incorrect(globals()["saveFileName"], globals()["givenPrefix"])
     skipCard()
 
 def flipCard(e=""):
