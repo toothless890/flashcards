@@ -317,6 +317,7 @@ def edit(file):
         skipCard()
         getsavedrawing()
         dataEditor.shuffle()
+        
     except:
         pass
     root.mainloop()
