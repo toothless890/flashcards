@@ -35,4 +35,6 @@ then the side that you are worse at will be displayed( also has a jiggle, so you
 
 If using windows, I highly recommend compressing the /Characters/ and /Descriptions/ folders (right click > properties>general> advanced> Compress contents to save disc space) as the files it stores can bloat rather quickly. 
 I'm not sure about linux and mac, but I made this for my own kanji study, and i find it unlikely anyone will just stumble across this
+
+
 <img width="297" alt="image" src="https://github.com/toothless890/flashcards/assets/70919263/946e2b29-f022-4431-a68e-bac3edf5d519">
