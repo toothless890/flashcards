@@ -314,7 +314,7 @@ def edit(file):
     #load the saved 
     try:
         dataEditor.getCards()
-        
+        skipCard()
         getsavedrawing()
         dataEditor.shuffle()
         skipCard()
