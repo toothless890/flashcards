@@ -10,7 +10,7 @@ def newCard(name):
     # if name is  not in data.txt then append it. else, just close
     if (not fetchCardIndex(name)): 
         
-        listCards.append(str(name) + ", 0, 0, 0, 0\n")
+        listCards.append([str(name),  "0", "0", "0", "0"])
         saveList()
         return "Created successfuly! Remember to flip!"
     else:
@@ -21,32 +21,33 @@ def newCard(name):
 def shuffle():
     # 0 = name, 1 = char succ, 2 = car total, 3= desc succ, 4 = desc total
     
-    listCards.sort(key=lambda score: score[1]/score[2]+score[3]/score[4]* (random.randrange(90, 110)/100))
+    listCards.sort(key=lambda score: ((1+int(score[1]))/(1+int(score[2]))) + ((int(score[3])+1)/(1+int(score[4])))* (random.randrange(90, 110)/100))
     pass
 
 def correct(name, side):
     index = fetchCardIndex(name)
     if side == "Characters/":
-        listCards[index][1]+=1
-        listCards[index][2]+=1
+        listCards[index][1] = int(listCards[index][1]) +1
+        listCards[index][2] = int(listCards[index][2]) +1
     else:
-        listCards[index][3]+=1
-        listCards[index][4]+=1
+        listCards[index][3] = int(listCards[index][3]) +1
+        listCards[index][4] = int(listCards[index][4]) +1
     saveList()
+    
 def incorrect(name, side):
     index = fetchCardIndex(name)
     if side == "Characters/":
 
-        listCards[index][2]+=1
+        listCards[index][2] = int(listCards[index][2]) +1
     else:
 
-        listCards[index][4]+=1
+        listCards[index][4] = int(listCards[index][4]) +1
     saveList()
 
 #get a list of all cards
 def getCards():
     file = open("data.txt", "r")
-    # data = {}
+    globals()["listCards"] = []
     for line in file.readlines(-1):
         line = line.replace("\n", "")
         lc = line.split(", ")
@@ -74,7 +75,8 @@ def removeCard(name):
 def saveList():
     file = open("data.txt", "r+")
     for line in listCards:
-        file.write(line)
+        
+        file.writelines(str(line).strip("[]").replace("'","").replace('"',"")+"\n")
     file.truncate()
-# def viewCard(name):
-#     draw.view
+getCards()
+saveList()

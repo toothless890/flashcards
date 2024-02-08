@@ -53,21 +53,21 @@ def captureMotion(e=""):
     # status.set(f"Position : x - {e.x} , y - {e.y}")
     
     # statusbar.update()
-    # globals()['prev_x'] = e.x
-    # globals()['prev_y'] = e.y
+    # globals()["prev_x"] = e.x
+    # globals()["prev_y"] = e.y
     
 
 
 # Update the previous position on mouse left click
 def recordPosition(e=""):
-    colors = globals()['colorList']
-    if globals()['openFilePrefix'] == "Characters/":
-        globals()['color'] = colors[globals()["colorIndex"]%len(colors)]
-        globals()['colorIndex'] +=1
+    colors = globals()["colorList"]
+    if globals()["openFilePrefix"] == "Characters/":
+        globals()["color"] = colors[globals()["colorIndex"]%len(colors)]
+        globals()["colorIndex"] +=1
     else:
-        globals()['color'] = "black"
-    globals()['prev_x'] = e.x
-    globals()['prev_y'] = e.y
+        globals()["color"] = "black"
+    globals()["prev_x"] = e.x
+    globals()["prev_y"] = e.y
     
 
 # Color Picker
@@ -75,7 +75,7 @@ def colorPicker(e=""):
     global color
     color = askcolor(color=color)[1]
     #Set the color of shapes
-    root.config(cursor=f'cursor {color} {color}', insertbackground=f"{color}")
+    root.config(cursor=f"cursor {color} {color}", insertbackground=f"{color}")
 
 # Update the current shape
 def shapechanger(e=""):
@@ -107,21 +107,21 @@ def drawShapesOnDragging(e=""):
         y = e.y
         
         element = createElms()
-        width = 0.7* max(0,25+-2*math.sqrt(abs(x-globals()['prev_x'])**2 + abs(y-globals()['prev_y'])**2))
-        globals()['line_width'] = width
+        width = 0.7* max(0,25+-2*math.sqrt(abs(x-globals()["prev_x"])**2 + abs(y-globals()["prev_y"])**2))
+        globals()["line_width"] = width
         # deleteUnwanted(element) # Delete unwanted shapes
         created_element_info_obj = {
         "c": color,
-        "px": globals()['prev_x'],
-        "py": globals()['prev_y'],
+        "px": globals()["prev_x"],
+        "py": globals()["prev_y"],
         "x": x,
         "y": y,
         "lw": width
     }
         
-        globals()['created_element_info'].append(created_element_info_obj)
-        globals()['prev_x'] = x
-        globals()['prev_y'] = y
+        globals()["created_element_info"].append(created_element_info_obj)
+        globals()["prev_x"] = x
+        globals()["prev_y"] = y
             
     except Exception as e:
         tmsg.showerror("Some Error Occurred!", e)
@@ -135,44 +135,53 @@ def deleteUnwanted(element):
         
 def createCard(e=""):
     clearCanvas()
-    name = globals()['setNameVar'].get() # TODO: set a text input box to allow name to go in
-    globals()['saveFileName'] = name
-    globals()['openFilePrefix'] = "Characters/"
+    name = globals()["setNameVar"].get() # TODO: set a text input box to allow name to go in
+    globals()["saveFileName"] = name
+    globals()["openFilePrefix"] = "Characters/"
     root.title(openFilePrefix+saveFileName)
     result = dataEditor.newCard(name)
-    globals()['setNameVar'].set("")
+    globals()["setNameVar"].set("")
     
-    globals()['status'].set(result)
-    globals()['statusbar'].update()
+    globals()["status"].set(result)
+    globals()["statusbar"].update()
+    getsavedrawing()
     
 def deleteCard(e=""):
     clearCanvas()
-    dataEditor.removeCard(globals()['saveFileName'])
-    
+    dataEditor.removeCard(globals()["saveFileName"])
+    globals()["cardIndex"] -= 1
     skipCard()
 
 def skipCard(e=""):
     clearCanvas()
-    card = dataEditor.listCards[(globals()['cardIndex'])]
-    globals()['saveFileName'] = card[0]
-    globals()['cardIndex']+=1
-    if (card[1]/card[2]>card[3]/card[4]): # TODO: add a jiggle
-        globals()['openFilePrefix'] = "Descriptions/"
+    card = dataEditor.listCards[(globals()["cardIndex"])]
+    globals()["saveFileName"] = card[0]
+    
+    if ((int(card[1])+1) / (int(card[2])+1)*dataEditor.random.randint(50,200)/100> (int(card[3])+1) / (int(card[4])+1)*dataEditor.random.randint(50,200)/100): # TODO: add a jiggle
+        globals()["openFilePrefix"] = "Descriptions/"
     else:
-        globals()['openFilePrefix'] = "Characters/"
+        globals()["openFilePrefix"] = "Characters/"
     getsavedrawing()
+    
+    globals()["cardIndex"]+=1
+    if (globals()["cardIndex"]>= 16):
+        dataEditor.shuffle()
+        globals()["cardIndex"] = 0
+        
+    globals()["cardIndex"]%=len(dataEditor.listCards)
+    
 
 def correctAnswer(e=""):
-    dataEditor.correct(globals()['saveFileName'], globals()['openFilePrefix'])
+    dataEditor.correct(globals()["saveFileName"], globals()["openFilePrefix"])
     skipCard()
     
 def incorrectAnswer(e=""):
-    dataEditor.incorrect(globals()['saveFileName'], globals()['openFilePrefix'])
+    dataEditor.incorrect(globals()["saveFileName"], globals()["openFilePrefix"])
     skipCard()
 
 def flipCard(e=""):
-    if (globals()['openFilePrefix'] == "Descriptions/"):
-        globals()['openFilePrefix'] = "Characters/"
+    if (globals()["openFilePrefix"] == "Descriptions/"):
+        globals()["openFilePrefix"] = "Characters/"
     else:
         globals()["openFilePrefix"] = "Descriptions/"
     clearCanvas()
@@ -182,11 +191,11 @@ def flipCard(e=""):
 # Save the list of shapes objects on a pickle file
 def saveDrawingFile(e=""):
     
-    filename = openFilePrefix+globals()['saveFileName'] + ".pkl"
+    filename = openFilePrefix+globals()["saveFileName"] + ".pkl"
     # filename = asksaveasfilename(initialfile="drawing",defaultextension=".pkl",filetypes=[("Pickle Files", "*.pkl")]) #Save as
     if filename != None: 
         with open(filename, "wb") as f:
-            pickle.dump(globals()['created_element_info'], f)
+            pickle.dump(globals()["created_element_info"], f)
     return
 
 
@@ -195,7 +204,7 @@ def saveDrawingFile(e=""):
 def getsavedrawing():
     global x, y, prev_x, prev_y, shape, color, line_width
     # filename = askopenfilename(defaultextension=".pkl", filetypes = [("Pickle Files", "*.pkl")])
-    filename = openFilePrefix+globals()['saveFileName'] + ".pkl"
+    filename = openFilePrefix+globals()["saveFileName"] + ".pkl"
     if filename != None:
         with open(filename, "rb") as f:
             data = pickle.load(f)
@@ -213,12 +222,12 @@ def getsavedrawing():
 def clearCanvas(e=""):
     global created_element_info, canvas, created, new
     canvas.delete("all")
-    globals()['created_element_info'] = []
+    globals()["created_element_info"] = []
     created = []
     new = []
     
 def edit(file):
-    globals()['saveFileName'] = file
+    globals()["saveFileName"] = file
     global canvas
     global radiovalue
     global root
@@ -254,30 +263,32 @@ def edit(file):
 
     #Buttons
     Button(frame, text="Skip", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=0, pady=6)
+           command=skipCard).pack(side=LEFT, padx=0, pady=6)
     
     Button(frame, text="Flip", font="comicsans 12 bold",
            command=flipCard).pack(side=LEFT, padx=0, pady=6)
     
     Button(frame, text="Correct", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=(12,0), pady=6)
+           command=correctAnswer).pack(side=LEFT, padx=(12,0), pady=6)
     
     Button(frame, text="Incorrect", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=0, pady=6)
+           command=incorrectAnswer).pack(side=LEFT, padx=0, pady=6)
     
+    
+    
+    Button(frame, text="New", font="comicsans 12 bold",
+           command=createCard).pack(side=RIGHT, padx=6, pady=6)
+    
+    globals()["setNameVar"] = StringVar()
+    Entry(frame, name="test", textvariable = setNameVar ).pack(side=RIGHT, padx=6, pady=6)
     
     
     Button(frame, text="Delete", font="comicsans 12 bold",
-        command=deleteCard).pack(side=RIGHT, padx=6)
-    
-    globals()['setNameVar'] = StringVar()
-    Entry(frame, name="test", textvariable = setNameVar ).pack(side=RIGHT, padx=6, pady=6)
-    
-    Button(frame, text="New", font="comicsans 12 bold",
-           command=createCard).pack(side=RIGHT, padx=12, pady=6)
+        command=deleteCard).pack(side=RIGHT, padx=12)
     
     Button(frame, text="Save", font="comicsans 12 bold",
         command=saveDrawingFile).pack(side=RIGHT, padx=0, pady=6)
+    
     Button(frame, text="Clear", font="comicsans 12 bold",
         command=clearCanvas).pack(side=RIGHT, padx=12)
     
@@ -299,6 +310,8 @@ def edit(file):
     statusbar.pack(side=BOTTOM, fill=X)
     #load the saved 
     try:
+        dataEditor.getCards()
+        skipCard()
         getsavedrawing()
     except:
         pass
