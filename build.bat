@@ -1,1 +1,1 @@
-pyinstaller --onefile draw.py
+pyinstaller --onefile --noconsole flashcards.py
