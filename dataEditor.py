@@ -4,6 +4,17 @@ import os
 import random
 global listCards
 listCards = []
+# create data file just in case
+
+
+import os
+if not os.path.exists("Characters"):
+    os.makedirs("Characters")
+    os.makedirs("Descriptions")
+    file = open("data.txt", "w")
+    file.close
+
+
 #either update or add a new card (will update if name is in list(make a naming convention to avoid overriding cards!))
 def newCard(name):
   
