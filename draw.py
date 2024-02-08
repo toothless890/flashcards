@@ -152,9 +152,15 @@ def deleteCard(e=""):
     skipCard()
 
 def skipCard(e=""):
-    dataEditor.fetchCardIndex(globals()['cardIndex'])
-    
+    clearCanvas()
+    card = dataEditor.listCards[(globals()['cardIndex'])]
+    globals()['saveFileName'] = card[0]
     globals()['cardIndex']+=1
+    if (card[1]/card[2]>card[3]/card[4]): # TODO: add a jiggle
+        globals()['openFilePrefix'] = "Descriptions/"
+    else:
+        globals()['openFilePrefix'] = "Characters/"
+    getsavedrawing()
 
 def correctAnswer(e=""):
     dataEditor.correct(globals()['saveFileName'], globals()['openFilePrefix'])
