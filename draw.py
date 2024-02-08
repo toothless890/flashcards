@@ -181,10 +181,12 @@ def incorrectAnswer(e=""):
 
 def flipCard(e=""):
     if (globals()["openFilePrefix"] == "Descriptions/"):
+        
         globals()["openFilePrefix"] = "Characters/"
     else:
         globals()["openFilePrefix"] = "Descriptions/"
-    clearCanvas()
+        clearCanvas()
+    
     root.title(openFilePrefix+saveFileName)
     getsavedrawing()
     

@@ -5,3 +5,5 @@ build/
 dist/
 draw.spec
 data.txt
+data.txt
+*.txt
