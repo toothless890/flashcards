@@ -1,7 +1,6 @@
-import draw
-import time
 import os
 import random
+
 global listCards
 listCards = []
 # create data file just in case

@@ -44,22 +44,10 @@ global line_width
 line_width = 13 # Width of the line shape
 
 
-
-# All the functions and logics go here
-#Capture Motions on every mouse position change
-def captureMotion(e=""):
-    pass
-    # #Update Status Bar
-    # status.set(f"Position : x - {e.x} , y - {e.y}")
-    
-    # statusbar.update()
-    # globals()["prev_x"] = e.x
-    # globals()["prev_y"] = e.y
-    
-
-
 # Update the previous position on mouse left click
 def recordPosition(e=""):
+    # colors if drawing kanji, black if its just the description
+    #perhaps base this off another variable that can be toggled with a button or a hotkey for drawing kanji when quizzing oneself
     colors = globals()["colorList"]
     if globals()["openFilePrefix"] == "Characters/":
         globals()["color"] = colors[globals()["colorIndex"]%len(colors)]
@@ -107,9 +95,10 @@ def drawShapesOnDragging(e=""):
         y = e.y
         
         element = createElms()
-        width = 0.7* max(0,25+-2*math.sqrt(abs(x-globals()["prev_x"])**2 + abs(y-globals()["prev_y"])**2))
+        #ill be tweaking this till the day i die.
+        width = 0.9* max(0,20+-1.2*math.sqrt(abs(x-globals()["prev_x"])**2 + abs(y-globals()["prev_y"])**2))
         globals()["line_width"] = width
-        # deleteUnwanted(element) # Delete unwanted shapes
+        
         created_element_info_obj = {
         "c": color,
         "px": globals()["prev_x"],
@@ -127,12 +116,6 @@ def drawShapesOnDragging(e=""):
         tmsg.showerror("Some Error Occurred!", e)
     
 
-def deleteUnwanted(element):
-    global created
-    created.append(element) #Elements that created
-    for item in created[:-1]: 
-        canvas.delete(item)
-        
 def createCard(e=""):
     clearCanvas()
     name = globals()["setNameVar"].get() # TODO: set a text input box to allow name to go in
@@ -151,24 +134,30 @@ def deleteCard(e=""):
     dataEditor.removeCard(globals()["saveFileName"])
     globals()["cardIndex"] -= 1
     skipCard()
-
+    
+# go to the next card in the list
 def skipCard(e=""):
     clearCanvas()
+    #fetch the next card in the list
     card = dataEditor.listCards[(globals()["cardIndex"])]
     globals()["saveFileName"] = card[0]
-    
+    #jiggle the values to make it lean towards the unpracticed card, but still include the well practiced one
     if ((int(card[1])+1) / (int(card[2])+1)*dataEditor.random.randint(50,200)/100> (int(card[3])+1) / (int(card[4])+1)*dataEditor.random.randint(50,200)/100): # TODO: add a jiggle
         globals()["openFilePrefix"] = "Descriptions/"
     else:
         globals()["openFilePrefix"] = "Characters/"
+    #store the loaded card so that when flipped, scores can be applied appropriately
     globals()["givenPrefix"] = globals()['openFilePrefix']
+    #load that card onto the canvas
     getsavedrawing()
-    
+    # reshuffle the cards every[16] cards, so that the whole list isnt run through every time
+    # TODO: maybe add a slider in the program to adjust this easier, 
     globals()["cardIndex"]+=1
     if (globals()["cardIndex"]>= 16):
         dataEditor.shuffle()
         globals()["cardIndex"] = 0
-        
+    
+    # if there aren't enough cards, loop TODO: improve this as this means no reshuffling... just add an if loop you dumbass
     globals()["cardIndex"]%=len(dataEditor.listCards)
     
 
@@ -191,18 +180,17 @@ def flipCard(e=""):
     root.title(openFilePrefix+saveFileName)
     getsavedrawing()
     
-# Save the list of shapes objects on a pickle file
+# ----- below this point is much less custom and more direct from the page i got it from ------
+# i've still made many changes, but its fairly trivial edits. 
+
+# Save the list of shapes objects on a pickle file // lol pickle 
 def saveDrawingFile(e=""):
-    
     filename = openFilePrefix+globals()["saveFileName"] + ".pkl"
     # filename = asksaveasfilename(initialfile="drawing",defaultextension=".pkl",filetypes=[("Pickle Files", "*.pkl")]) #Save as
     if filename != None: 
         with open(filename, "wb") as f:
             pickle.dump(globals()["created_element_info"], f)
     return
-
-
-    
 
 def getsavedrawing():
     global x, y, prev_x, prev_y, shape, color, line_width
@@ -251,7 +239,7 @@ def edit(file):
     canvas.bind("<1>", recordPosition) #On Mouse left click
     canvas.bind("<B1-Motion>", drawShapesOnDragging) #Capture Mouse left click + move (dragging)
     # canvas.bind("<B1-Motion>", generateShapesObj) #When Mouse left click release
-    canvas.bind("<Motion>", captureMotion) #Mouse Motion
+    
     frame = Frame(root)
     frame.pack(side=BOTTOM)
     
@@ -260,10 +248,7 @@ def edit(file):
     radiovalue.set("Line") #Default Select
     
     
-    # Manupulates Radios from the list
-    # for shape in geometry_shapes:
-    #     radio = Radiobutton(frame, text=shape, variable=radiovalue, font="comicsans     12 bold", value=shape, command=shapechanger).pack(side=LEFT, padx=6,pady=3)
-
+    # okay i did add a bunch of buttons and stuff
     #Buttons
     Button(frame, text="Skip", font="comicsans 12 bold",
            command=skipCard).pack(side=LEFT, padx=0, pady=6)
@@ -277,14 +262,11 @@ def edit(file):
     Button(frame, text="Incorrect", font="comicsans 12 bold",
            command=incorrectAnswer).pack(side=LEFT, padx=0, pady=6)
     
-    
-    
     Button(frame, text="New", font="comicsans 12 bold",
            command=createCard).pack(side=RIGHT, padx=6, pady=6)
-    
+    # I forgot where i found about StringVar's but its just part of how this is supposed to be used so i don't feel bad about leaving out credit
     globals()["setNameVar"] = StringVar()
     Entry(frame, name="test", textvariable = setNameVar ).pack(side=RIGHT, padx=6, pady=6)
-    
     
     Button(frame, text="Delete", font="comicsans 12 bold",
         command=deleteCard).pack(side=RIGHT, padx=12)
@@ -294,24 +276,13 @@ def edit(file):
     
     Button(frame, text="Clear", font="comicsans 12 bold",
         command=clearCanvas).pack(side=RIGHT, padx=12)
-    
-    
-    
-    
 
-    
-    
-    # Scale
-    # scale = Scale(root, from_=1, to=20, orient=HORIZONTAL, command=setlinewidth)
-    # scale.pack(side=BOTTOM)
-
-    # Status Bar
     global status
     global statusbar
     status = StringVar()
     statusbar = Label(root, textvariable=status, anchor="w", relief=SUNKEN)
     statusbar.pack(side=BOTTOM, fill=X)
-    #load the saved 
+    #load a card, idk why this got it working, but im not changing it
     try:
         dataEditor.getCards()
         skipCard()
@@ -323,9 +294,8 @@ def edit(file):
         pass
     root.mainloop()
     
-    
-    
-    
-    
+# o shoot, this explains a few of my problems
+#
+# welp, im not changing it now since it works :)
 if __name__ == "__main__":
     edit("test1.pkl")
