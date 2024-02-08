@@ -1,7 +1,10 @@
 <img width="605" alt="image" src="https://github.com/toothless890/flashcards/assets/70919263/34d19452-ca58-4351-8a0d-dc8de00a42c2">
 <img width="605" alt="image" src="https://github.com/toothless890/flashcards/assets/70919263/888c900a-1421-4335-9701-2d5e0460d6bf">
 
-
+***
+the basic drawing functionality was taken directly from
+https://dev.to/fahad_islam/python-project-a-drawing-pad-gui-3f42
+***
 Basic Instructions:
 
 to make a card,
