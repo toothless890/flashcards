@@ -14,7 +14,7 @@ def newCard(name):
         file =  open("data.txt", "a")
         file.write(str(name) + ", 0, 0, 0, 0\n")
         file.close()
-        return "Saved successfuly! Remember to flip!"
+        return "Created successfuly! Remember to flip!"
     else:
         
         return "Error! Card with that name already exists"
@@ -24,6 +24,7 @@ def newCard(name):
 #get a list of all cards
 # TODO: perhaps optimize to only get run once, and update internally. 
 # But i'm not too worried, only runs every now and then, performance isnt a huge deal
+# (also saves data in the case of a sudden exit :)
 def getCards():
     file = open("data.txt")
     data = {}

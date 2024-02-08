@@ -5,15 +5,13 @@ import pickle #save draw object in pickle file
 from tkinter.colorchooser import askcolor #custom color palates
 import math
 import dataEditor
-# Copied and modified from:
-#   https://dev.to/fahad_islam/python-project-a-drawing-pad-gui-3f42
-#
-#
-#
-#
-#
-#
 
+#**********************************************************************
+#**********************************************************************
+# Large parts of this file are copied and modified from:
+#   https://dev.to/fahad_islam/python-project-a-drawing-pad-gui-3f42
+#**********************************************************************
+#**********************************************************************
 
 # Starting point of mouse dragging or shapes
 global prev_x
@@ -38,11 +36,11 @@ global saveFileName
 saveFileName = "testfail.pkl"
 global openFilePrefix
 openFilePrefix = "Characters/"
+global setNameVar
 
 global line_width
 line_width = 13 # Width of the line shape
-global flip
-flip = 0
+
 
 
 # All the functions and logics go here
@@ -61,10 +59,14 @@ def captureMotion(e=""):
 # Update the previous position on mouse left click
 def recordPosition(e=""):
     colors = globals()['colorList']
-    globals()['color'] = colors[globals()["colorIndex"]%len(colors)]
+    if globals()['openFilePrefix'] == "Characters/":
+        globals()['color'] = colors[globals()["colorIndex"]%len(colors)]
+        globals()['colorIndex'] +=1
+    else:
+        globals()['color'] = "black"
     globals()['prev_x'] = e.x
     globals()['prev_y'] = e.y
-    globals()['colorIndex'] +=1
+    
 
 # Color Picker
 def colorPicker(e=""):
@@ -131,13 +133,21 @@ def deleteUnwanted(element):
         
 def createCard(e=""):
     clearCanvas()
-    name = "testNewSave" # TODO: set a text input box to allow name to go in
+    name = globals()['setNameVar'].get() # TODO: set a text input box to allow name to go in
     globals()['saveFileName'] = name
     globals()['openFilePrefix'] = "Characters/"
     root.title(openFilePrefix+saveFileName)
-    dataEditor.newCard(name)
+    result = dataEditor.newCard(name)
+    globals()['setNameVar'].set("")
     
+    globals()['status'].set(result)
+    globals()['statusbar'].update()
     
+def deleteCard(e=""):
+    clearCanvas()
+    dataEditor.removeCard(globals()['saveFileName'])
+    
+    #TODO: go to next card
 
 def skipCard(e=""):
     pass
@@ -166,6 +176,9 @@ def saveDrawingFile(e=""):
         with open(filename, "wb") as f:
             pickle.dump(globals()['created_element_info'], f)
     return
+
+
+    
 
 def getsavedrawing():
     global x, y, prev_x, prev_y, shape, color, line_width
@@ -203,8 +216,8 @@ def edit(file):
     # All Widgets here such as canvas, buttons etc
 
     # Canvas
-    CANVAS_WIDTH = 600
-    CANVAS_HEIGHT = 400
+    CANVAS_WIDTH = 800
+    CANVAS_HEIGHT = 600
     
     canvas = Canvas(root, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, bg="white")
     canvas.pack()
@@ -228,6 +241,26 @@ def edit(file):
     #     radio = Radiobutton(frame, text=shape, variable=radiovalue, font="comicsans     12 bold", value=shape, command=shapechanger).pack(side=LEFT, padx=6,pady=3)
 
     #Buttons
+    Button(frame, text="Skip", font="comicsans 12 bold",
+           command=None).pack(side=LEFT, padx=0, pady=6)
+    
+    Button(frame, text="Flip", font="comicsans 12 bold",
+           command=flipCard).pack(side=LEFT, padx=0, pady=6)
+    
+    Button(frame, text="Correct", font="comicsans 12 bold",
+           command=None).pack(side=LEFT, padx=(12,0), pady=6)
+    
+    Button(frame, text="Incorrect", font="comicsans 12 bold",
+           command=None).pack(side=LEFT, padx=0, pady=6)
+    
+    
+    
+    Button(frame, text="Delete", font="comicsans 12 bold",
+        command=deleteCard).pack(side=RIGHT, padx=6)
+    
+    globals()['setNameVar'] = StringVar()
+    Entry(frame, name="test", textvariable = setNameVar ).pack(side=RIGHT, padx=6, pady=6)
+    
     Button(frame, text="New", font="comicsans 12 bold",
            command=createCard).pack(side=RIGHT, padx=12, pady=6)
     
@@ -236,26 +269,20 @@ def edit(file):
     Button(frame, text="Clear", font="comicsans 12 bold",
         command=clearCanvas).pack(side=RIGHT, padx=12)
     
-    Button(frame, text="Flip", font="comicsans 12 bold",
-           command=flipCard).pack(side=LEFT, padx=12, pady=6)
     
     
-    Button(frame, text="Correct", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=0, pady=6)
     
-    Button(frame, text="Incorrect", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=12, pady=6)
-    
-    Button(frame, text="Skip", font="comicsans 12 bold",
-           command=None).pack(side=LEFT, padx=0, pady=6)
 
+    
+    
     # Scale
     # scale = Scale(root, from_=1, to=20, orient=HORIZONTAL, command=setlinewidth)
     # scale.pack(side=BOTTOM)
 
     # Status Bar
+    global status
+    global statusbar
     status = StringVar()
-    status.set("Position : x - 0 , y - 0")
     statusbar = Label(root, textvariable=status, anchor="w", relief=SUNKEN)
     statusbar.pack(side=BOTTOM, fill=X)
     #load the saved 
