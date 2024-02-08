@@ -9,3 +9,10 @@ data.txt
 *.txt
 __pycache__/draw.cpython-310.pyc
 __pycache__/dataEditor.cpython-310.pyc
+data.txt
+*.pyc
+__pycache__/dataEditor.cpython-310.pyc
+*.pyc
+__pycache__/dataEditor.cpython-310.pyc
+__pycache__/draw.cpython-310.pyc
+data.txt
