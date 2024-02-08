@@ -38,6 +38,8 @@ global openFilePrefix
 openFilePrefix = "Characters/"
 global setNameVar
 
+global cardIndex
+cardIndex = 0
 global line_width
 line_width = 13 # Width of the line shape
 
@@ -147,16 +149,20 @@ def deleteCard(e=""):
     clearCanvas()
     dataEditor.removeCard(globals()['saveFileName'])
     
-    #TODO: go to next card
+    skipCard()
 
 def skipCard(e=""):
-    pass
+    dataEditor.fetchCardIndex(globals()['cardIndex'])
+    
+    globals()['cardIndex']+=1
 
 def correctAnswer(e=""):
-    pass
-
-def correctAnswer(e=""):
-    pass
+    dataEditor.correct(globals()['saveFileName'], globals()['openFilePrefix'])
+    skipCard()
+    
+def incorrectAnswer(e=""):
+    dataEditor.incorrect(globals()['saveFileName'], globals()['openFilePrefix'])
+    skipCard()
 
 def flipCard(e=""):
     if (globals()['openFilePrefix'] == "Descriptions/"):
