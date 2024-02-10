@@ -160,6 +160,7 @@ def skipCard(e=""):
     # keep it hidden for learning sake
     globals()["cardIndex"]+=1
     if (globals()["cardIndex"]>= 16):
+        print(dataEditor.listCards)
         dataEditor.shuffle()
         globals()["cardIndex"] = 0
     

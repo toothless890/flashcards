@@ -30,9 +30,10 @@ def newCard(name):
 
 def shuffle():
     # 0 = name, 1 = char succ, 2 = car total, 3= desc succ, 4 = desc total
+    # discovered unintentional behavior where unseen cards are not sorted. Not a terrible "Feature" :D
+    listCards.sort(key=lambda score: ((int(score[1]))/(1+int(score[2]))) + ((int(score[3]))/(1+int(score[4])))* (random.randrange(75, 150)/100))
     
-    listCards.sort(key=lambda score: ((int(score[1]))/(1+int(score[2]))) + ((int(score[3]))/(1+int(score[4])))* (random.randrange(90, 110)/100))
-    pass
+    
 
 def correct(name, side):
     index = fetchCardIndex(name)
