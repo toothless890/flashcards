@@ -117,6 +117,9 @@ def drawShapesOnDragging(e=""):
     
 
 def createCard(e=""):
+    
+    if (globals()["setNameVar"].get() == ""): return
+    
     clearCanvas()
     name = globals()["setNameVar"].get() # TODO: set a text input box to allow name to go in
     globals()["saveFileName"] = name
@@ -137,6 +140,7 @@ def deleteCard(e=""):
     
 # go to the next card in the list
 def skipCard(e=""):
+    
     clearCanvas()
     #fetch the next card in the list
     card = dataEditor.listCards[(globals()["cardIndex"])]
@@ -152,6 +156,8 @@ def skipCard(e=""):
     getsavedrawing()
     # reshuffle the cards every[16] cards, so that the whole list isnt run through every time
     # TODO: maybe add a slider in the program to adjust this easier, 
+    # root.title(openFilePrefix+saveFileName) # i've elected not to update the card on changed card in order to
+    # keep it hidden for learning sake
     globals()["cardIndex"]+=1
     if (globals()["cardIndex"]>= 16):
         dataEditor.shuffle()
@@ -277,6 +283,8 @@ def edit(file):
     Button(frame, text="Clear", font="comicsans 12 bold",
         command=clearCanvas).pack(side=RIGHT, padx=12)
 
+    root.bind('<Return>', createCard)
+    
     global status
     global statusbar
     status = StringVar()
