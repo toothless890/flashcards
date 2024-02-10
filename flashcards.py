@@ -115,11 +115,14 @@ def drawShapesOnDragging(e=""):
     except Exception as e:
         tmsg.showerror("Some Error Occurred!", e)
     
+def updateStatus(message):
+    globals()["status"].set(message)
+    globals()["statusbar"].update()
 
 def createCard(e=""):
     
     if (globals()["setNameVar"].get() == ""): return
-    
+    globals()["colorIndex"] = 0
     clearCanvas()
     name = globals()["setNameVar"].get() # TODO: set a text input box to allow name to go in
     globals()["saveFileName"] = name
@@ -128,15 +131,16 @@ def createCard(e=""):
     result = dataEditor.newCard(name)
     globals()["setNameVar"].set("")
     
-    globals()["status"].set(result)
-    globals()["statusbar"].update()
+    updateStatus(result)
     getsavedrawing()
     
 def deleteCard(e=""):
+    
     clearCanvas()
     dataEditor.removeCard(globals()["saveFileName"])
     globals()["cardIndex"] -= 1
     skipCard()
+    updateStatus("Card Deleted")
     
 # go to the next card in the list
 def skipCard(e=""):
@@ -167,6 +171,8 @@ def skipCard(e=""):
     # if there aren't enough cards, loop TODO: improve this as this means no reshuffling... just add an if loop you dumbass
     globals()["cardIndex"]%=len(dataEditor.listCards)
     
+    updateStatus("Next Card")
+    
 
 def correctAnswer(e=""):
     dataEditor.correct(globals()["saveFileName"], globals()["givenPrefix"])
@@ -177,6 +183,7 @@ def incorrectAnswer(e=""):
     skipCard()
 
 def flipCard(e=""):
+    
     if (globals()["openFilePrefix"] == "Descriptions/"):
         
         globals()["openFilePrefix"] = "Characters/"
@@ -186,6 +193,7 @@ def flipCard(e=""):
     clearCanvas()
     root.title(openFilePrefix+saveFileName)
     getsavedrawing()
+    updateStatus("Card flipped")
     
 # ----- below this point is much less custom and more direct from the page i got it from ------
 # i've still made many changes, but its fairly trivial edits. 
@@ -197,7 +205,10 @@ def saveDrawingFile(e=""):
     if filename != None: 
         with open(filename, "wb") as f:
             pickle.dump(globals()["created_element_info"], f)
+            updateStatus("Saved!")
     return
+    
+
 
 def getsavedrawing():
     global x, y, prev_x, prev_y, shape, color, line_width
@@ -218,6 +229,7 @@ def getsavedrawing():
 
 # Clear the Canvas
 def clearCanvas(e=""):
+    globals()["colorIndex"] = 0
     global created_element_info, canvas, created, new
     canvas.delete("all")
     globals()["created_element_info"] = []
