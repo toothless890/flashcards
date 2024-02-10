@@ -99,9 +99,9 @@ def drawShapesOnDragging(e=""):
         x = e.x
         y = e.y
         # reduce wasted lines on small movements (1 should make 0 difference, 2 makes tiny but saves more space)
-        if (abs(x -globals()["prev_x"]) <2 and abs(y - globals()["prev_y"]) <2 ):
+        if (abs(x -globals()["prev_x"]) <1 and abs(y - globals()["prev_y"]) <1 ):
             return 
-        
+        # can make a bigger difference when writing slowly. leaving at 1 for now, not a huge file size reduction ~2-5%
         
         
         element = createElms()
@@ -160,7 +160,7 @@ def skipCard(e=""):
     card = dataEditor.listCards[(globals()["cardIndex"])]
     globals()["saveFileName"] = card[0]
     #jiggle the values to make it lean towards the unpracticed card, but still include the well practiced one
-    if ((int(card[1])+1) / (int(card[2])+1)*dataEditor.random.randint(50,200)/100> (int(card[3])+1) / (int(card[4])+1)*dataEditor.random.randint(50,200)/100): # TODO: add a jiggle
+    if ((int(card[1])) / (int(card[2])+1)*dataEditor.random.randint(50,200)/100> (int(card[3])) / (int(card[4])+1)*dataEditor.random.randint(50,200)/100): # TODO: add a jiggle
         globals()["openFilePrefix"] = "Descriptions/"
     else:
         globals()["openFilePrefix"] = "Characters/"
