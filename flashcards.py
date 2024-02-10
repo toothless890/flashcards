@@ -57,6 +57,11 @@ def recordPosition(e=""):
     globals()["prev_x"] = e.x
     globals()["prev_y"] = e.y
     
+def release():
+    print("released")
+    #TODO: Why isnt this working?
+    #TODO: eventually go through last few (~5?) linked lines unless there's a gap then stop, 
+    #       reduce thickness of a line following curve
 
 # Color Picker
 def colorPicker(e=""):
@@ -93,6 +98,8 @@ def drawShapesOnDragging(e=""):
         # Update current Position
         x = e.x
         y = e.y
+        if (x == globals()["prev_x"] and y == globals()["prev_y"] ):
+            return 
         
         element = createElms()
         #ill be tweaking this till the day i die.
@@ -257,7 +264,7 @@ def edit(file):
     # Structure: canvas.bind("<eventcodename>", function-name)
     canvas.bind("<1>", recordPosition) #On Mouse left click
     canvas.bind("<B1-Motion>", drawShapesOnDragging) #Capture Mouse left click + move (dragging)
-    # canvas.bind("<B1-Motion>", generateShapesObj) #When Mouse left click release
+    canvas.bind("ButtonRelease-1", release) #When Mouse left click release
     
     frame = Frame(root)
     frame.pack(side=BOTTOM)
