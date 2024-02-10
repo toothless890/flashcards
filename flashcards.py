@@ -98,8 +98,11 @@ def drawShapesOnDragging(e=""):
         # Update current Position
         x = e.x
         y = e.y
-        if (x == globals()["prev_x"] and y == globals()["prev_y"] ):
+        # reduce wasted lines on small movements (1 should make 0 difference, 2 makes tiny but saves more space)
+        if (abs(x -globals()["prev_x"]) <2 and abs(y - globals()["prev_y"]) <2 ):
             return 
+        
+        
         
         element = createElms()
         #ill be tweaking this till the day i die.
