@@ -106,9 +106,9 @@ def drawShapesOnDragging(e=""):
         
         element = createElms()
         #ill be tweaking this till the day i die.
-        width = 0.9* max(0,15+-1.2*math.sqrt(abs(x-globals()["prev_x"])**2 + abs(y-globals()["prev_y"])**2))
+        width = 0.9* max(0,20-3.0*(abs(x-globals()["prev_x"])**2 + abs(y-globals()["prev_y"])**2)**0.33)
         globals()["line_width"] = width
-        
+         
         created_element_info_obj = {
         "c": color,
         "px": globals()["prev_x"],
